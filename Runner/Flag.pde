@@ -1,4 +1,3 @@
-//class for flags
 public class Flag{
   private float xpos;
   private float ypos;
@@ -7,6 +6,7 @@ public class Flag{
   private float initialxpos;
   private float initialypos;
   private boolean isCaptured = false;
+  private int capturednum = 0;
   private color c;
   
   public Flag(Float xpos, Float ypos){
@@ -15,11 +15,17 @@ public class Flag{
     initialxpos = xpos;
     initialypos = ypos;
   }
+  
   public void drawflag(Player p){
     
     //player still alive and captures flag update flagcaptured status
-    if(p.isDead == false && p.xpos < this.xpos + this.w && p.xpos > this.xpos && p.ypos > this.ypos && p.ypos < this.ypos + this.h){
+    if(p.isDead == false && p.xpos-p.rad <= this.xpos + this.w && p.xpos+p.rad >= this.xpos && p.ypos+p.rad >= this.ypos && p.ypos-p.rad <= this.ypos + this.h){
+      capturednum++;
+      if(capturednum == 1){
+        captureWhoosh.play();
+      }
       isCaptured = true;
+      p.FlagCaptured = true;
     }
     
     //if captured then act captured update pos
@@ -29,6 +35,7 @@ public class Flag{
     }
     //if not captured then initial pos
     else if(!isCaptured){
+      capturednum = 0;
       this.xpos = initialxpos;
       this.ypos = initialypos;
     }
@@ -39,6 +46,7 @@ public class Flag{
     rect(xpos, ypos, w, h/2);
     stroke(#FFFFFF);
     line(xpos,ypos, xpos, ypos+h);
+    noStroke();
   }
   
 }
